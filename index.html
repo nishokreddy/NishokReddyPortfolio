@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nishok Reddy — Security Analyst</title>
+  <meta name="description" content="Venkat Sai Nishok Reddy Penaka — Associate Security Analyst specializing in SOC Operations, Incident Response, SIEM, EDR & XDR, and Cloud Security." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── TOKENS ─── */
+    :root {
+      --bg:        #060b10;
+      --bg2:       #0b1320;
+      --bg3:       #0f1b2d;
+      --surface:   #111e30;
+      --border:    #1a2e44;
+      --green:     #00e5a0;
+      --cyan:      #00c8ff;
+      --amber:     #f5a623;
+      --red:       #ff4757;
+      --text:      #c9d8e8;
+      --muted:     #627d98;
+      --white:     #eaf2ff;
+      --mono:      'Space Mono', monospace;
+      --sans:      'Syne', sans-serif;
+      --radius:    8px;
+      --glow-g:    0 0 20px rgba(0,229,160,.18), 0 0 60px rgba(0,229,160,.06);
+      --glow-c:    0 0 20px rgba(0,200,255,.18), 0 0 60px rgba(0,200,255,.06);
+      --trans:     all .3s cubic-bezier(.25,.8,.25,1);
+    }
+
+    /* ─── RESET ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+    img { max-width: 100%; display: block; }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 2px; }
+
+    /* ─── GRID NOISE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,160,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,160,.025) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.1rem 4rem;
+      background: rgba(6,11,16,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: var(--trans);
+    }
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: .85rem;
+      color: var(--green);
+      letter-spacing: .12em;
+    }
+    .nav-logo span { color: var(--muted); }
+    .nav-links { display: flex; gap: 2.5rem; align-items: center; }
+    .nav-links a {
+      font-size: .78rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: var(--trans);
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--green);
+      transition: width .3s ease;
+    }
+    .nav-links a:hover { color: var(--green); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-cta {
+      font-family: var(--mono);
+      font-size: .75rem;
+      padding: .45rem 1.1rem;
+      border: 1px solid var(--green);
+      color: var(--green) !important;
+      border-radius: var(--radius);
+      transition: var(--trans);
+    }
+    .nav-cta:hover { background: var(--green); color: var(--bg) !important; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--green); transition: var(--trans); }
+
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 4rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,229,160,.08) 0%, transparent 70%);
+      top: 50%; left: 55%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      animation: pulse-glow 6s ease-in-out infinite;
+    }
+    @keyframes pulse-glow {
+      0%, 100% { opacity: .6; transform: translate(-50%,-50%) scale(1); }
+      50%       { opacity: 1;  transform: translate(-50%,-50%) scale(1.08); }
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 780px; }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-family: var(--mono);
+      font-size: .72rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--green);
+      border: 1px solid rgba(0,229,160,.3);
+      border-radius: 100px;
+      padding: .35rem .9rem;
+      margin-bottom: 1.8rem;
+      opacity: 0;
+      animation: fadeUp .6s ease .2s forwards;
+    }
+    .badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: blink 1.4s ease infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+    .hero-title {
+      font-family: var(--sans);
+      font-size: clamp(2.6rem, 6vw, 5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -.02em;
+      color: var(--white);
+      margin-bottom: 1.4rem;
+      opacity: 0;
+      animation: fadeUp .7s ease .35s forwards;
+    }
+    .hero-title .accent { color: var(--green); }
+    .hero-title .dim    { color: var(--muted); }
+    .hero-sub {
+      font-family: var(--mono);
+      font-size: .85rem;
+      color: var(--cyan);
+      letter-spacing: .08em;
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: fadeUp .7s ease .5s forwards;
+    }
+    .hero-desc {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 560px;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp .7s ease .65s forwards;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp .7s ease .8s forwards;
+    }
+    .btn-primary {
+      font-family: var(--mono);
+      font-size: .78rem;
+      letter-spacing: .1em;
+      padding: .75rem 1.8rem;
+      background: var(--green);
+      color: var(--bg);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: var(--trans);
+      font-weight: 700;
+    }
+    .btn-primary:hover { background: #00ffb3; box-shadow: var(--glow-g); transform: translateY(-2px); }
+    .btn-outline {
+      font-family: var(--mono);
+      font-size: .78rem;
+      letter-spacing: .1em;
+      padding: .75rem 1.8rem;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: var(--trans);
+    }
+    .btn-outline:hover { border-color: var(--cyan); color: var(--cyan); box-shadow: var(--glow-c); transform: translateY(-2px); }
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      margin-top: 4rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp .7s ease 1s forwards;
+    }
+    .stat-num {
+      font-family: var(--mono);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+    }
+    .stat-num .stat-unit { color: var(--green); font-size: 1rem; }
+    .stat-label { font-size: .72rem; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; margin-top: .3rem; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── SECTION LAYOUT ─── */
+    section {
+      padding: 6rem 4rem;
+      position: relative;
+      z-index: 1;
+    }
+    .section-label {
+      font-family: var(--mono);
+      font-size: .72rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: .6rem;
+    }
+    .section-title {
+      font-family: var(--sans);
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 1rem;
+      letter-spacing: -.02em;
+    }
+    .section-desc {
+      font-size: .95rem;
+      color: var(--muted);
+      max-width: 540px;
+      margin-bottom: 3.5rem;
+    }
+    .divider {
+      width: 40px; height: 2px;
+      background: linear-gradient(90deg, var(--green), transparent);
+      margin-bottom: 1.2rem;
+    }
+
+    /* ─── ABOUT ─── */
+    #about { background: var(--bg2); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+    .about-text p {
+      font-size: .95rem;
+      color: var(--muted);
+      margin-bottom: 1.2rem;
+    }
+    .about-text p strong { color: var(--text); }
+    .about-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      margin-top: 1.5rem;
+    }
+    .tag {
+      font-family: var(--mono);
+      font-size: .68rem;
+      letter-spacing: .1em;
+      padding: .3rem .75rem;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--muted);
+      transition: var(--trans);
+    }
+    .tag:hover { border-color: var(--green); color: var(--green); }
+    .about-sidebar { display: flex; flex-direction: column; gap: 1.2rem; }
+    .info-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      transition: var(--trans);
+    }
+    .info-card:hover { border-color: rgba(0,229,160,.4); box-shadow: var(--glow-g); }
+    .info-icon {
+      width: 36px; height: 36px;
+      min-width: 36px;
+      border-radius: 8px;
+      background: rgba(0,229,160,.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .95rem;
+    }
+    .info-key { font-family: var(--mono); font-size: .65rem; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
+    .info-val { font-size: .88rem; color: var(--text); margin-top: .15rem; }
+
+    /* ─── EXPERIENCE ─── */
+    #experience { background: var(--bg); }
+    .timeline { position: relative; padding-left: 2rem; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 1px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--green), var(--border), transparent);
+    }
+    .timeline-item {
+      position: relative;
+      padding-bottom: 3rem;
+      padding-left: 2rem;
+      opacity: 0;
+      transform: translateX(-12px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .timeline-item.visible { opacity: 1; transform: translateX(0); }
+    .timeline-dot {
+      position: absolute;
+      left: -2.42rem;
+      top: .35rem;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--green);
+      border: 2px solid var(--bg);
+      box-shadow: 0 0 8px var(--green);
+    }
+    .tl-meta {
+      font-family: var(--mono);
+      font-size: .68rem;
+      color: var(--green);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: .4rem;
+    }
+    .tl-role {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: .15rem;
+    }
+    .tl-company { font-size: .85rem; color: var(--muted); margin-bottom: 1rem; }
+    .tl-list { display: flex; flex-direction: column; gap: .5rem; }
+    .tl-list li {
+      font-size: .88rem;
+      color: var(--muted);
+      padding-left: 1.2rem;
+      position: relative;
+    }
+    .tl-list li::before {
+      content: '›';
+      position: absolute;
+      left: 0;
+      color: var(--green);
+    }
+
+    /* ─── SKILLS ─── */
+    #skills { background: var(--bg2); }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .skill-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.6rem;
+      transition: var(--trans);
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    .skill-card.visible { opacity: 1; transform: translateY(0); }
+    .skill-card:hover { border-color: rgba(0,229,160,.4); box-shadow: var(--glow-g); transform: translateY(-4px); }
+    .skill-cat {
+      font-family: var(--mono);
+      font-size: .65rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 1rem;
+    }
+    .skill-items { display: flex; flex-wrap: wrap; gap: .45rem; }
+    .skill-pill {
+      font-family: var(--mono);
+      font-size: .68rem;
+      padding: .28rem .7rem;
+      border-radius: 100px;
+      background: rgba(0,229,160,.06);
+      border: 1px solid rgba(0,229,160,.18);
+      color: var(--text);
+      transition: var(--trans);
+    }
+    .skill-pill:hover { background: rgba(0,229,160,.15); border-color: var(--green); color: var(--green); }
+    .skill-pill.cyan {
+      background: rgba(0,200,255,.06);
+      border-color: rgba(0,200,255,.18);
+    }
+    .skill-pill.cyan:hover { background: rgba(0,200,255,.15); border-color: var(--cyan); color: var(--cyan); }
+
+    /* ─── PROJECTS ─── */
+    #projects { background: var(--bg); }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.6rem;
+    }
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.8rem;
+      transition: var(--trans);
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    .project-card.visible { opacity: 1; transform: translateY(0); }
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--green), var(--cyan));
+      opacity: 0;
+      transition: var(--trans);
+    }
+    .project-card:hover { border-color: rgba(0,229,160,.3); box-shadow: var(--glow-g); transform: translateY(-5px); }
+    .project-card:hover::before { opacity: 1; }
+    .project-num {
+      font-family: var(--mono);
+      font-size: .68rem;
+      color: var(--muted);
+      letter-spacing: .12em;
+      margin-bottom: .8rem;
+    }
+    .project-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: .7rem;
+    }
+    .project-desc { font-size: .84rem; color: var(--muted); margin-bottom: 1.2rem; }
+    .project-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .project-tag {
+      font-family: var(--mono);
+      font-size: .62rem;
+      padding: .22rem .6rem;
+      border-radius: 4px;
+      background: rgba(0,200,255,.07);
+      border: 1px solid rgba(0,200,255,.15);
+      color: var(--cyan);
+    }
+
+    /* ─── CERTIFICATIONS ─── */
+    #certifications { background: var(--bg2); }
+    .cert-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.2rem;
+    }
+    .cert-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.4rem 1.6rem;
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+      transition: var(--trans);
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    .cert-card.visible { opacity: 1; transform: translateY(0); }
+    .cert-card:hover { border-color: rgba(245,166,35,.35); box-shadow: 0 0 20px rgba(245,166,35,.1); transform: translateY(-3px); }
+    .cert-icon {
+      width: 42px; height: 42px;
+      min-width: 42px;
+      background: rgba(245,166,35,.1);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+    }
+    .cert-name { font-size: .9rem; font-weight: 600; color: var(--white); }
+    .cert-body { font-family: var(--mono); font-size: .65rem; color: var(--muted); margin-top: .2rem; letter-spacing: .08em; }
+
+    /* ─── THOUGHTS / BLOG ─── */
+    #thoughts { background: var(--bg); }
+    .thoughts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+    .thought-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.8rem;
+      transition: var(--trans);
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    .thought-card.visible { opacity: 1; transform: translateY(0); }
+    .thought-card:hover { border-color: rgba(0,200,255,.3); box-shadow: var(--glow-c); transform: translateY(-4px); }
+    .thought-topic {
+      font-family: var(--mono);
+      font-size: .65rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: .8rem;
+    }
+    .thought-title { font-size: 1rem; font-weight: 700; color: var(--white); margin-bottom: .6rem; line-height: 1.4; }
+    .thought-preview { font-size: .84rem; color: var(--muted); line-height: 1.6; }
+    .thought-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1.2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .thought-read {
+      font-family: var(--mono);
+      font-size: .65rem;
+      color: var(--cyan);
+      letter-spacing: .1em;
+    }
+    .thought-arrow { color: var(--cyan); font-size: .9rem; transition: transform .3s ease; }
+    .thought-card:hover .thought-arrow { transform: translateX(4px); }
+
+    /* ─── MODAL ─── */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(6,11,16,.9);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s ease;
+    }
+    .modal-backdrop.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      max-width: 680px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 2.5rem;
+      transform: scale(.96);
+      transition: transform .3s ease;
+    }
+    .modal-backdrop.open .modal { transform: scale(1); }
+    .modal-topic { font-family: var(--mono); font-size: .65rem; color: var(--cyan); letter-spacing: .15em; text-transform: uppercase; margin-bottom: .8rem; }
+    .modal-title { font-size: 1.4rem; font-weight: 800; color: var(--white); margin-bottom: 1.2rem; }
+    .modal-body { font-size: .9rem; color: var(--muted); line-height: 1.8; }
+    .modal-body p { margin-bottom: 1rem; }
+    .modal-close {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: var(--trans);
+    }
+    .modal-close:hover { color: var(--white); border-color: var(--green); }
+    .modal { position: relative; }
+
+    /* ─── CONTACT ─── */
+    #contact { background: var(--bg2); }
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+    .contact-links { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; }
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.4rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: var(--trans);
+      color: var(--muted);
+      font-size: .88rem;
+    }
+    .contact-link:hover { border-color: rgba(0,229,160,.4); color: var(--green); box-shadow: var(--glow-g); }
+    .cl-icon { font-size: 1.1rem; min-width: 20px; text-align: center; }
+    .contact-form { display: flex; flex-direction: column; gap: 1.1rem; }
+    .form-group { display: flex; flex-direction: column; gap: .4rem; }
+    .form-label { font-family: var(--mono); font-size: .65rem; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; }
+    .form-input {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: .8rem 1rem;
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: .88rem;
+      outline: none;
+      transition: var(--trans);
+      resize: none;
+    }
+    .form-input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,229,160,.08); }
+    .form-input::placeholder { color: var(--muted); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 2rem 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: .7rem;
+      color: var(--muted);
+      position: relative;
+      z-index: 1;
+    }
+    .footer-left { display: flex; align-items: center; gap: .5rem; }
+    .footer-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: blink 1.4s infinite; }
+
+    /* ─── TERMINAL PROMPT ─── */
+    .terminal-line {
+      font-family: var(--mono);
+      font-size: .8rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      margin-bottom: .4rem;
+    }
+    .terminal-line .prompt { color: var(--green); }
+    .terminal-line .cmd    { color: var(--cyan); }
+
+    /* ─── SCROLL REVEAL ─── */
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .65s ease, transform .65s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.8rem; }
+      .nav-links { display: none; }
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(6,11,16,.97);
+        align-items: center;
+        justify-content: center;
+        gap: 2.5rem;
+        z-index: 99;
+      }
+      .nav-links.open a { font-size: 1.1rem; }
+      .hamburger { display: flex; z-index: 101; }
+      section { padding: 4rem 1.8rem; }
+      #hero { padding: 7rem 1.8rem 3rem; }
+      .about-grid, .contact-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .hero-stats { gap: 1.8rem; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; padding: 1.5rem 1.8rem; }
+    }
+    @media (max-width: 520px) {
+      .hero-title { font-size: 2rem; }
+      .projects-grid, .thoughts-grid { grid-template-columns: 1fr; }
+      .hero-stats { flex-wrap: wrap; gap: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="nav-logo"><span>//</span> nishok.sec</div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#certifications">Certs</a></li>
+      <li><a href="#thoughts">Thoughts</a></li>
+      <li><a href="#contact" class="nav-cta">Contact</a></li>
+    </ul>
+    <div class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Available for new opportunities
+      </div>
+      <h1 class="hero-title">
+        Venkat Sai<br>
+        <span class="accent">Nishok Reddy</span><br>
+        <span class="dim">Penaka</span>
+      </h1>
+      <p class="hero-sub">$ whoami → Associate Security Analyst | SOC Operations</p>
+      <p class="hero-desc">
+        Defending enterprise environments with 2+ years in SOC operations.
+        Specialized in SIEM, EDR/XDR, incident response, and threat intelligence
+        — currently protecting Aurobindo Pharma's infrastructure.
+      </p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn-primary">View My Work</a>
+        <a href="#contact" class="btn-outline">Get In Touch</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">2<span class="stat-unit">+</span></div>
+          <div class="stat-label">Years in SOC</div>
+        </div>
+        <div>
+          <div class="stat-num">100<span class="stat-unit">+</span></div>
+          <div class="stat-label">Daily Alerts Triaged</div>
+        </div>
+        <div>
+          <div class="stat-num">5<span class="stat-unit">+</span></div>
+          <div class="stat-label">Certifications</div>
+        </div>
+        <div>
+          <div class="stat-num">7<span class="stat-unit">+</span></div>
+          <div class="stat-label">Projects Built</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-label">01 / About</div>
+    <div class="divider"></div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <h2 class="section-title">Securing What Matters</h2>
+        <p>I'm an Associate Security Analyst embedded in Aurobindo Pharma's SOC, where I monitor, detect, and respond to threats across a regulated pharmaceutical enterprise — a high-stakes environment where security is non-negotiable.</p>
+        <p>My daily workflow revolves around <strong>SentinelOne AI SIEM, Stellar Cyber Open XDR, Microsoft Sentinel</strong>, and <strong>SentinelOne EDR</strong> — triaging 60–100 alerts per day and turning raw signals into clear, actionable incident reports.</p>
+        <p>Beyond triage, I investigate malware infections, phishing campaigns, and unauthorized access attempts, correlate IOCs against threat feeds, and support ISO 27001 audit readiness. I also build Python-based tools to automate repetitive SOC tasks — because good analysts work smarter, not just harder.</p>
+        <p>I'm currently expanding into <strong>AI-driven security</strong>, LLM-based threat tooling, and autonomous agents — the next frontier of defense operations.</p>
+        <div class="about-tags">
+          <span class="tag">Threat Detection</span>
+          <span class="tag">Incident Response</span>
+          <span class="tag">SIEM Engineering</span>
+          <span class="tag">Phishing Analysis</span>
+          <span class="tag">IOC Analysis</span>
+          <span class="tag">ISO 27001</span>
+          <span class="tag">Python Automation</span>
+          <span class="tag">Cloud Security</span>
+        </div>
+      </div>
+      <div class="about-sidebar reveal">
+        <div class="info-card">
+          <div class="info-icon">📍</div>
+          <div>
+            <div class="info-key">Location</div>
+            <div class="info-val">Hyderabad, India</div>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">🏢</div>
+          <div>
+            <div class="info-key">Current Role</div>
+            <div class="info-val">Associate Security Analyst @ Auropro Soft Systems → Aurobindo Pharma Ltd.</div>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">🎓</div>
+          <div>
+            <div class="info-key">Education</div>
+            <div class="info-val">B.Tech — Electronics &amp; Communication Engineering<br>Institute of Aeronautical Engineering, Hyderabad (2019–2023)</div>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">✉️</div>
+          <div>
+            <div class="info-key">Email</div>
+            <div class="info-val"><a href="mailto:nishokreddy23@gmail.com" style="color:var(--green)">nishokreddy23@gmail.com</a></div>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">🔗</div>
+          <div>
+            <div class="info-key">LinkedIn</div>
+            <div class="info-val"><a href="https://linkedin.com/in/nishokreddy23" target="_blank" style="color:var(--cyan)">linkedin.com/in/nishokreddy23</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="section-label">02 / Experience</div>
+    <div class="divider"></div>
+    <h2 class="section-title reveal">Where I've Operated</h2>
+    <p class="section-desc reveal">Hands-on SOC work in a live enterprise environment — pharmaceutical-grade security operations.</p>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="tl-meta">June 2024 — Present · Hyderabad</div>
+        <div class="tl-role">Associate Security Analyst — SOC Operations</div>
+        <div class="tl-company">Auropro Soft Systems → Aurobindo Pharma Ltd.</div>
+        <ul class="tl-list">
+          <li>Monitor and analyze 60–100 daily SIEM alerts across SentinelOne AI SIEM, Microsoft Sentinel, and Stellar Cyber.</li>
+          <li>Perform alert triage, severity assessment, and escalation of critical incidents using defined IR playbooks.</li>
+          <li>Conduct endpoint investigations with SentinelOne EDR — process trees, persistence mechanisms, lateral movement.</li>
+          <li>Analyze network logs from Fortinet IDS/IPS and Zscaler ZIA/ZPA to detect anomalous traffic patterns.</li>
+          <li>Correlate threat intelligence with internal telemetry; validate and enrich IOCs (IP, domain, file hash).</li>
+          <li>Perform phishing analysis using email header inspection, sandbox detonation (ANY.RUN, Hybrid Analysis), and VirusTotal lookups.</li>
+          <li>Execute automated and manual vulnerability assessments with Nessus; support remediation tracking.</li>
+          <li>Support ISO 27001 audits by generating evidence reports and assisting with compliance documentation.</li>
+          <li>Manage incident tracking, escalation, and reporting lifecycle through ServiceNow.</li>
+          <li>Deliver security awareness sessions to end users across Aurobindo Pharma departments.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="section-label">03 / Skills &amp; Tools</div>
+    <div class="divider"></div>
+    <h2 class="section-title reveal">My Security Stack</h2>
+    <p class="section-desc reveal">Platforms, tools, and frameworks I work with daily to detect, investigate, and respond to threats.</p>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <div class="skill-cat">⚡ SIEM &amp; Monitoring</div>
+        <div class="skill-items">
+          <span class="skill-pill">SentinelOne AI SIEM</span>
+          <span class="skill-pill">Microsoft Sentinel</span>
+          <span class="skill-pill">Stellar Cyber</span>
+          <span class="skill-pill">Splunk</span>
+          <span class="skill-pill">KQL</span>
+          <span class="skill-pill">SPL</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-cat">🛡️ Endpoint &amp; XDR</div>
+        <div class="skill-items">
+          <span class="skill-pill">SentinelOne EDR</span>
+          <span class="skill-pill">Open XDR</span>
+          <span class="skill-pill">Fortinet IDS/IPS</span>
+          <span class="skill-pill">Process Analysis</span>
+          <span class="skill-pill">Persistence Detection</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-cat cyan">☁️ Cloud &amp; Network Security</div>
+        <div class="skill-items">
+          <span class="skill-pill cyan">Zscaler ZIA</span>
+          <span class="skill-pill cyan">Zscaler ZPA</span>
+          <span class="skill-pill cyan">CyberArk PAM</span>
+          <span class="skill-pill cyan">Azure Basics</span>
+          <span class="skill-pill cyan">Check Point</span>
+          <span class="skill-pill cyan">FortiGate</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-cat">🔬 Threat Intel &amp; Malware Analysis</div>
+        <div class="skill-items">
+          <span class="skill-pill">VirusTotal</span>
+          <span class="skill-pill">ANY.RUN</span>
+          <span class="skill-pill">Hybrid Analysis</span>
+          <span class="skill-pill">AbuseIPDB</span>
+          <span class="skill-pill">IOC Analysis</span>
+          <span class="skill-pill">MITRE ATT&amp;CK</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-cat cyan">🐍 Automation &amp; Scripting</div>
+        <div class="skill-items">
+          <span class="skill-pill cyan">Python</span>
+          <span class="skill-pill cyan">CI/CD Basics</span>
+          <span class="skill-pill cyan">Scapy</span>
+          <span class="skill-pill cyan">Nmap Scripting</span>
+          <span class="skill-pill cyan">Bash</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-cat">📋 Governance &amp; Frameworks</div>
+        <div class="skill-items">
+          <span class="skill-pill">ISO 27001</span>
+          <span class="skill-pill">IR Lifecycle</span>
+          <span class="skill-pill">ServiceNow</span>
+          <span class="skill-pill">Vulnerability Management</span>
+          <span class="skill-pill">Nessus</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-label">04 / Projects</div>
+    <div class="divider"></div>
+    <h2 class="section-title reveal">Things I've Built</h2>
+    <p class="section-desc reveal">Hands-on security labs, detection tools, and automation scripts — built to reinforce real SOC skills.</p>
+    <div class="projects-grid">
+      <div class="project-card">
+        <div class="project-num">01</div>
+        <div class="project-name">SIEM Lab — Wazuh Implementation</div>
+        <div class="project-desc">Built a fully functional SIEM lab using Wazuh on Linux VMs. Integrated Windows and Linux agents, performed log monitoring and configured rule-based alerting for common attack scenarios.</div>
+        <div class="project-tags">
+          <span class="project-tag">Wazuh</span>
+          <span class="project-tag">Linux</span>
+          <span class="project-tag">SIEM</span>
+          <span class="project-tag">Alert Rules</span>
+          <span class="project-tag">Log Analysis</span>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">02</div>
+        <div class="project-name">Splunk SIEM Lab</div>
+        <div class="project-desc">Deployed Splunk Enterprise from scratch, created detection queries and interactive dashboards, and implemented Splunk Security Essentials for threat detection use cases.</div>
+        <div class="project-tags">
+          <span class="project-tag">Splunk</span>
+          <span class="project-tag">SPL</span>
+          <span class="project-tag">Dashboards</span>
+          <span class="project-tag">Threat Detection</span>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">03</div>
+        <div class="project-name">Python Threat Intelligence Tool</div>
+        <div class="project-desc">Automated bulk IOC enrichment using VirusTotal and AbuseIPDB APIs. Built a script to check IP/domain/hash reputation at scale and generate structured threat intelligence reports.</div>
+        <div class="project-tags">
+          <span class="project-tag">Python</span>
+          <span class="project-tag">VirusTotal API</span>
+          <span class="project-tag">AbuseIPDB</span>
+          <span class="project-tag">IOC Enrichment</span>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">04</div>
+        <div class="project-name">Network Traffic Analyzer (Scapy)</div>
+        <div class="project-desc">Developed a Python/Scapy-based tool to capture and analyze live network traffic, providing Wireshark-like visibility into packet-level data for learning and threat hunting exercises.</div>
+        <div class="project-tags">
+          <span class="project-tag">Python</span>
+          <span class="project-tag">Scapy</span>
+          <span class="project-tag">Packet Analysis</span>
+          <span class="project-tag">Network Security</span>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">05</div>
+        <div class="project-name">Vulnerability Scanner Tool</div>
+        <div class="project-desc">Built a Python-based vulnerability scanner using Nmap. Generates CSV and HTML scan reports with identified open ports, running services, and vulnerability findings.</div>
+        <div class="project-tags">
+          <span class="project-tag">Python</span>
+          <span class="project-tag">Nmap</span>
+          <span class="project-tag">CSV/HTML Reports</span>
+          <span class="project-tag">Vuln Management</span>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">06</div>
+        <div class="project-name">Vulnerability Assessment — Metasploitable</div>
+        <div class="project-desc">Executed automated comprehensive vulnerability scans on a Metasploitable instance using Nessus, categorized findings by CVSS severity, and produced prioritized remediation reports.</div>
+        <div class="project-tags">
+          <span class="project-tag">Nessus</span>
+          <span class="project-tag">Metasploitable</span>
+          <span class="project-tag">CVSS</span>
+          <span class="project-tag">Risk Prioritization</span>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">07</div>
+        <div class="project-name">Penetration Testing — Metasploit Framework</div>
+        <div class="project-desc">Conducted network reconnaissance using Nmap and performed targeted exploitation of open services via Metasploit. Documented attack paths and mapped findings to MITRE ATT&amp;CK techniques.</div>
+        <div class="project-tags">
+          <span class="project-tag">Metasploit</span>
+          <span class="project-tag">Nmap</span>
+          <span class="project-tag">Pen Testing</span>
+          <span class="project-tag">MITRE ATT&amp;CK</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATIONS -->
+  <section id="certifications">
+    <div class="section-label">05 / Certifications</div>
+    <div class="divider"></div>
+    <h2 class="section-title reveal">Credentials &amp; Training</h2>
+    <p class="section-desc reveal">Industry-recognized certifications validating my security knowledge and technical capabilities.</p>
+    <div class="cert-grid">
+      <div class="cert-card">
+        <div class="cert-icon">🏆</div>
+        <div>
+          <div class="cert-name">CompTIA Security+</div>
+          <div class="cert-body">CompTIA · SY0-701 · Jan 2025</div>
+        </div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon">🤖</div>
+        <div>
+          <div class="cert-name">SentinelOne AI SIEM Foundation</div>
+          <div class="cert-body">SentinelOne</div>
+        </div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon">🔵</div>
+        <div>
+          <div class="cert-name">SentinelOne Singularity Enterprise Foundation</div>
+          <div class="cert-body">SentinelOne</div>
+        </div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon">📊</div>
+        <div>
+          <div class="cert-name">SOC Analyst Training (Splunk)</div>
+          <div class="cert-body">Splunk</div>
+        </div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon">📧</div>
+        <div>
+          <div class="cert-name">Proofpoint Certified Email Authentication Specialist</div>
+          <div class="cert-body">Proofpoint</div>
+        </div>
+      </div>
+      <div class="cert-card" style="border-style:dashed;opacity:.6">
+        <div class="cert-icon">🎯</div>
+        <div>
+          <div class="cert-name">CISSP / CEH</div>
+          <div class="cert-body">Currently pursuing · In Progress</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THOUGHTS -->
+  <section id="thoughts">
+    <div class="section-label">06 / Thoughts</div>
+    <div class="divider"></div>
+    <h2 class="section-title reveal">Security Perspectives</h2>
+    <p class="section-desc reveal">Observations and opinions from the SOC floor — on detection engineering, threat trends, and the future of security operations.</p>
+    <div class="thoughts-grid">
+      <div class="thought-card" data-topic="Detection Engineering" data-title="Why Tuning Your SIEM Is Never Done" data-body="<p>Every SOC analyst knows the feeling: a freshly deployed SIEM rule fires 200 alerts on day one, and 190 of them are false positives. The instinct is to disable the rule. The right move is to tune it.</p><p>SIEM tuning isn't a one-time task — it's an ongoing discipline. Environments change: new tools get deployed, VPNs shift egress IPs, developers start running scripts on production boxes at 2 AM. A rule that was accurate six months ago may be garbage today.</p><p>What separates a mature SOC from a reactive one is the feedback loop: every false positive is a data point. Every missed detection is a gap. Building a structured review cadence — weekly rule reviews, monthly false positive analysis, quarterly use-case audits — transforms a noisy SIEM into a precision instrument.</p><p>The goal isn't zero alerts. The goal is every alert meaning something.</p>">
+        <div class="thought-topic">Detection Engineering</div>
+        <div class="thought-title">Why Tuning Your SIEM Is Never Done</div>
+        <div class="thought-preview">Every false positive is a data point. Every missed detection is a gap. Here's why SIEM tuning is a discipline, not a task.</div>
+        <div class="thought-footer">
+          <span class="thought-read">5 min read</span>
+          <span class="thought-arrow">→</span>
+        </div>
+      </div>
+      <div class="thought-card" data-topic="Threat Landscape" data-title="Phishing in 2025: It's Not What You Think" data-body="<p>When most people picture phishing, they imagine a badly formatted email from 'PayPaI' with a suspicious link. That era of phishing is mostly dead. Modern phishing campaigns are frighteningly convincing — and the SOC analyst who underestimates them will miss them.</p><p>From my analysis work at Aurobindo, the most dangerous phishing attempts we see share common traits: they come from recently registered domains that haven't yet made threat intel lists, they use legitimate email infrastructure (SendGrid, Mailchimp) to bypass reputation filters, and they target specific employees by name with context harvested from LinkedIn.</p><p>Defense has to match offense. Static URL blocklists aren't enough. Email header analysis, sandbox detonation of every attachment, and behavioral analysis of clicked links are now baseline requirements — not advanced capabilities.</p><p>The most underrated skill in phishing defense? Training users to be suspicious of things that look legitimate. The obvious fakes are the decoys.</p>">
+        <div class="thought-topic">Threat Landscape</div>
+        <div class="thought-title">Phishing in 2025: It's Not What You Think</div>
+        <div class="thought-preview">Modern phishing campaigns are frighteningly convincing. Static blocklists aren't enough anymore — here's what we're actually seeing in the wild.</div>
+        <div class="thought-footer">
+          <span class="thought-read">4 min read</span>
+          <span class="thought-arrow">→</span>
+        </div>
+      </div>
+      <div class="thought-card" data-topic="AI & Security" data-title="The SOC Analyst Who Embraces AI Wins" data-body="<p>There's a fear circulating in the security community that AI will replace SOC analysts. I think this fear is misplaced — but the underlying anxiety points to something real.</p><p>AI is already changing SOC work. Platforms like SentinelOne's Purple AI can surface context, suggest queries, and draft initial triage summaries in seconds. This is genuinely useful. An analyst who fights this will be overwhelmed. An analyst who learns to direct it will be formidable.</p><p>The analysts who will struggle aren't the ones AI replaces — they're the ones who never developed deep technical understanding and relied entirely on tool outputs to do their thinking. When the AI is wrong (and it will be wrong), only a human who understands the underlying protocols, attack techniques, and environment context can catch the mistake.</p><p>My view: learn the fundamentals deeply, use AI to move faster, and stay the human in the loop. That's what the next generation of security analyst looks like.</p>">
+        <div class="thought-topic">AI &amp; Security</div>
+        <div class="thought-title">The SOC Analyst Who Embraces AI Wins</div>
+        <div class="thought-preview">AI isn't replacing SOC analysts — it's separating those who understand the fundamentals from those who don't. Here's the opportunity.</div>
+        <div class="thought-footer">
+          <span class="thought-read">4 min read</span>
+          <span class="thought-arrow">→</span>
+        </div>
+      </div>
+      <div class="thought-card" data-topic="Career" data-title="From ECE Graduate to SOC Analyst" data-body="<p>My undergraduate degree is in Electronics and Communication Engineering — not Computer Science, not Information Security. Breaking into cybersecurity from a non-CS background is entirely possible, but it requires deliberate effort.</p><p>The path that worked for me: start with fundamentals (CompTIA Security+, then networking, then operating systems), build labs (Wazuh, Splunk, even just a home network with a pfSense router), and find a way into managed security services where you're exposed to real alerts from day one.</p><p>The SOC is one of the best entry points into security because it's inherently broad. In two years I've touched network security, endpoint forensics, cloud security, phishing analysis, vulnerability management, and compliance — all in one role.</p><p>To anyone from a non-traditional background considering security: the field rewards curiosity and consistency more than credentials. Build things, break things, and document what you learn. The opportunities are there.</p>">
+        <div class="thought-topic">Career</div>
+        <div class="thought-title">From ECE Graduate to SOC Analyst</div>
+        <div class="thought-preview">Breaking into cybersecurity without a CS degree is possible. Here's the honest account of what actually worked — and what I'd tell my earlier self.</div>
+        <div class="thought-footer">
+          <span class="thought-read">6 min read</span>
+          <span class="thought-arrow">→</span>
+        </div>
+      </div>
+      <div class="thought-card" data-topic="Tools" data-title="Open XDR vs SIEM: Do You Need Both?" data-body="<p>The line between SIEM and XDR is blurring — and vendors are happy to keep it blurry. Having worked with both Stellar Cyber (Open XDR) and SentinelOne AI SIEM, I have a practical perspective on what each actually does.</p><p>Traditional SIEMs are log aggregation engines with correlation rules on top. They're powerful but require significant tuning and expertise. XDR platforms ingest telemetry from endpoints, network, cloud, and identity sources and apply ML-based detection — lower tuning overhead, faster time-to-detect for known attack patterns.</p><p>The honest answer to 'do you need both?': it depends on your org size and security maturity. For enterprises with dedicated security engineers, a tuned SIEM gives you maximum control and customization. For lean security teams, an Open XDR platform delivers better coverage with less overhead.</p><p>The future is probably a converged platform. But today, knowing both makes you a significantly more versatile analyst.</p>">
+        <div class="thought-topic">Tools</div>
+        <div class="thought-title">Open XDR vs SIEM: Do You Need Both?</div>
+        <div class="thought-preview">Having worked with both Stellar Cyber and SentinelOne AI SIEM in production, here's an honest breakdown of what each actually does — and when you need them.</div>
+        <div class="thought-footer">
+          <span class="thought-read">5 min read</span>
+          <span class="thought-arrow">→</span>
+        </div>
+      </div>
+      <div class="thought-card" data-topic="Compliance" data-title="ISO 27001 Audits: What the SOC Actually Does" data-body="<p>ISO 27001 gets discussed a lot at the management layer — risk registers, asset inventories, policy documentation. But the SOC analyst's role in an audit is less discussed and often more stressful.</p><p>In practice, audit evidence from the SOC means: log retention proof, incident response documentation, evidence of regular alert review, vulnerability scan reports with remediation tracking, and access control logs. The SOC becomes a primary evidence source for controls in the Annex A categories covering incident management, access control, and monitoring.</p><p>The biggest lesson from supporting Aurobindo's ISO 27001 evidence process: automate your evidence collection from day one. Generate weekly scan reports programmatically. Keep incident tickets well-structured. Maintain log retention policies you can demonstrate, not just describe.</p><p>An audit isn't a test you study for at the last minute. It's a demonstration of what you do every day. If your daily operations are disciplined, the audit mostly takes care of itself.</p>">
+        <div class="thought-topic">Compliance</div>
+        <div class="thought-title">ISO 27001 Audits: What the SOC Actually Does</div>
+        <div class="thought-preview">The SOC analyst's role in ISO 27001 audits is rarely discussed but critically important. Here's what evidence collection actually looks like from the floor.</div>
+        <div class="thought-footer">
+          <span class="thought-read">4 min read</span>
+          <span class="thought-arrow">→</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-label">07 / Contact</div>
+    <div class="divider"></div>
+    <div class="contact-inner">
+      <div class="reveal">
+        <h2 class="section-title">Let's Connect</h2>
+        <p class="section-desc" style="margin-bottom:0">Open to L2 SOC Analyst, Threat Intelligence, and Security Consultant roles in Hyderabad. Also happy to discuss security topics, collaborate on projects, or just talk shop.</p>
+        <div class="contact-links">
+          <a href="mailto:nishokreddy23@gmail.com" class="contact-link">
+            <span class="cl-icon">✉️</span>
+            <span>nishokreddy23@gmail.com</span>
+          </a>
+          <a href="https://linkedin.com/in/nishokreddy23" target="_blank" class="contact-link">
+            <span class="cl-icon">🔗</span>
+            <span>linkedin.com/in/nishokreddy23</span>
+          </a>
+          <a href="https://github.com/nishokreddy23" target="_blank" class="contact-link">
+            <span class="cl-icon">🐙</span>
+            <span>github.com/nishokreddy23</span>
+          </a>
+        </div>
+        <div style="margin-top:2rem">
+          <div class="terminal-line"><span class="prompt">$</span><span class="cmd">nishok --status</span></div>
+          <div class="terminal-line"><span class="prompt">→</span><span style="color:var(--green)">open_to_work: true</span></div>
+          <div class="terminal-line"><span class="prompt">→</span><span style="color:var(--green)">location: Hyderabad, IN</span></div>
+          <div class="terminal-line"><span class="prompt">→</span><span style="color:var(--green)">target_roles: [L2_SOC, Threat_Intel, Sec_Consultant]</span></div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="contact-form">
+          <div class="form-group">
+            <label class="form-label">Your Name</label>
+            <input type="text" class="form-input" placeholder="Jane Smith" id="cName" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Your Email</label>
+            <input type="email" class="form-input" placeholder="jane@company.com" id="cEmail" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Subject</label>
+            <input type="text" class="form-input" placeholder="Opportunity at Acme Security" id="cSubject" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Message</label>
+            <textarea class="form-input" rows="5" placeholder="Hi Nishok, I came across your portfolio and wanted to reach out about..." id="cMessage"></textarea>
+          </div>
+          <button class="btn-primary" onclick="handleContact()" style="align-self:flex-start">Send Message →</button>
+          <p id="contactMsg" style="font-family:var(--mono);font-size:.72rem;color:var(--green);display:none">✓ Opening your email client...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">
+      <span class="footer-dot"></span>
+      <span>Venkat Sai Nishok Reddy Penaka</span>
+    </div>
+    <span>Designed &amp; built with intention · Hyderabad, India · 2025</span>
+    <span style="color:var(--green)">$ stay_secure —always</span>
+  </footer>
+
+  <!-- THOUGHT MODAL -->
+  <div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)">
+    <div class="modal" id="modal">
+      <button class="modal-close" onclick="closeModalBtn()">✕</button>
+      <div class="modal-topic" id="modalTopic"></div>
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    /* ── NAV SCROLL SHADOW ── */
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').style.boxShadow =
+        window.scrollY > 40 ? '0 4px 30px rgba(0,0,0,.5)' : 'none';
+    });
+
+    /* ── HAMBURGER ── */
+    const ham = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    ham.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+    navLinks.querySelectorAll('a').forEach(a =>
+      a.addEventListener('click', () => navLinks.classList.remove('open'))
+    );
+
+    /* ── INTERSECTION OBSERVER (scroll reveal) ── */
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          // stagger children of grid containers
+          const delay = e.target.dataset.delay || 0;
+          setTimeout(() => e.target.classList.add('visible'), delay * 80);
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll(
+      '.reveal, .timeline-item, .skill-card, .project-card, .cert-card, .thought-card'
+    ).forEach((el, i) => {
+      el.dataset.delay = i % 4; // stagger within rows
+      io.observe(el);
+    });
+
+    /* ── THOUGHT MODAL ── */
+    document.querySelectorAll('.thought-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.getElementById('modalTopic').textContent  = card.dataset.topic;
+        document.getElementById('modalTitle').textContent  = card.dataset.title;
+        document.getElementById('modalBody').innerHTML     = card.dataset.body;
+        document.getElementById('modalBackdrop').classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    function closeModal(e) {
+      if (e.target.id === 'modalBackdrop') closeModalBtn();
+    }
+    function closeModalBtn() {
+      document.getElementById('modalBackdrop').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModalBtn();
+    });
+
+    /* ── CONTACT FORM ── */
+    function handleContact() {
+      const name    = document.getElementById('cName').value.trim();
+      const email   = document.getElementById('cEmail').value.trim();
+      const subject = document.getElementById('cSubject').value.trim();
+      const message = document.getElementById('cMessage').value.trim();
+      const mailto  = `mailto:nishokreddy23@gmail.com?subject=${encodeURIComponent(subject || 'Portfolio Contact')}&body=${encodeURIComponent(`Hi Nishok,\n\n${message}\n\nFrom: ${name}\nEmail: ${email}`)}`;
+      window.location.href = mailto;
+      document.getElementById('contactMsg').style.display = 'block';
+    }
+
+    /* ── ACTIVE NAV LINK ── */
+    const sections = document.querySelectorAll('section[id]');
+    const navAs = document.querySelectorAll('.nav-links a');
+    const activateNav = () => {
+      let current = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 120) current = s.id;
+      });
+      navAs.forEach(a => {
+        a.style.color = a.getAttribute('href') === '#' + current ? 'var(--green)' : '';
+      });
+    };
+    window.addEventListener('scroll', activateNav);
+  </script>
+</body>
+</html>
