@@ -1307,12 +1307,6 @@
         <div class="thought-preview">Breaking into cybersecurity without a CS degree is possible. Here's the honest account of what actually worked — and what I'd tell my earlier self.</div>
         <div class="thought-footer"><span class="thought-read">6 min read</span><span class="thought-arrow">→</span></div>
       </div>
-      <div class="thought-card" data-topic="Tools" data-title="Open XDR vs SIEM: Do You Need Both?" data-body="<p>The line between SIEM and XDR is blurring — and vendors are happy to keep it blurry. Having worked with both Stellar Cyber (Open XDR) and SentinelOne AI SIEM, I have a practical perspective on what each actually does.</p><p>Traditional SIEMs are log aggregation engines with correlation rules on top. They're powerful but require significant tuning and expertise. XDR platforms ingest telemetry from endpoints, network, cloud, and identity sources and apply ML-based detection — lower tuning overhead, faster time-to-detect for known attack patterns.</p><p>The honest answer to 'do you need both?': it depends on your org size and security maturity. For enterprises with dedicated security engineers, a tuned SIEM gives you maximum control and customization. For lean security teams, an Open XDR platform delivers better coverage with less overhead.</p><p>The future is probably a converged platform. But today, knowing both makes you a significantly more versatile analyst.</p>">
-        <div class="thought-topic">Tools</div>
-        <div class="thought-title">Open XDR vs SIEM: Do You Need Both?</div>
-        <div class="thought-preview">Having worked with both Stellar Cyber and SentinelOne AI SIEM in production, here's an honest breakdown of what each actually does — and when you need them.</div>
-        <div class="thought-footer"><span class="thought-read">5 min read</span><span class="thought-arrow">→</span></div>
-      </div>
       <div class="thought-card" data-topic="Compliance" data-title="ISO 27001 Audits: What the SOC Actually Does" data-body="<p>ISO 27001 gets discussed a lot at the management layer — risk registers, asset inventories, policy documentation. But the SOC analyst's role in an audit is less discussed and often more stressful.</p><p>In practice, audit evidence from the SOC means: log retention proof, incident response documentation, evidence of regular alert review, vulnerability scan reports with remediation tracking, and access control logs. The SOC becomes a primary evidence source for controls in the Annex A categories covering incident management, access control, and monitoring.</p><p>The biggest lesson from supporting Aurobindo's ISO 27001 evidence process: automate your evidence collection from day one. Generate weekly scan reports programmatically. Keep incident tickets well-structured. Maintain log retention policies you can demonstrate, not just describe.</p><p>An audit isn't a test you study for at the last minute. It's a demonstration of what you do every day. If your daily operations are disciplined, the audit mostly takes care of itself.</p>">
         <div class="thought-topic">Compliance</div>
         <div class="thought-title">ISO 27001 Audits: What the SOC Actually Does</div>
@@ -1339,10 +1333,10 @@
             <span class="cl-icon">🔗</span>
             <span>linkedin.com/in/nishokreddy23</span>
           </a>
-          <a href="https://github.com/nishokreddy23" target="_blank" class="contact-link">
+       <!--  <a href="https://github.com/nishokreddy23" target="_blank" class="contact-link">
             <span class="cl-icon">🐙</span>
             <span>github.com/nishokreddy23</span>
-          </a>
+          </a> -->
         </div>
         <div style="margin-top:2rem">
           <div class="terminal-line"><span class="prompt">$</span><span class="cmd">Nishok --status</span></div>
@@ -1355,11 +1349,11 @@
         <div class="contact-form">
           <div class="form-group">
             <label class="form-label">Your Name</label>
-            <input type="text" class="form-input" placeholder="Venkat" id="cName" />
+            <input type="text" class="form-input" placeholder="Jhon" id="cName" />
           </div>
           <div class="form-group">
             <label class="form-label">Your Email</label>
-            <input type="email" class="form-input" placeholder="venkat@company.com" id="cEmail" />
+            <input type="email" class="form-input" placeholder="jhon@company.com" id="cEmail" />
           </div>
           <div class="form-group">
             <label class="form-label">Subject</label>
@@ -1367,7 +1361,7 @@
           </div>
           <div class="form-group">
             <label class="form-label">Message</label>
-            <textarea class="form-input" rows="5" placeholder="Hi Nishok, I came across your portfolio and wanted to reach out about..." id="cMessage"></textarea>
+            <textarea class="form-input" rows="5" placeholder="Hi Nishok Reddy, I came across your portfolio and wanted to reach out about..." id="cMessage"></textarea>
           </div>
           <button class="btn-primary" onclick="handleContact()" style="align-self:flex-start">Send Message →</button>
           <p id="contactMsg" style="font-family:var(--mono);font-size:.72rem;color:var(--green);display:none">✓ Opening your email client...</p>
@@ -1382,8 +1376,8 @@
       <span class="footer-dot"></span>
       <span>Venkat Sai Nishok Reddy Penaka</span>
     </div>
-    <span>Designed &amp; built with intention · Hyderabad, India · 2025</span>
-    <span style="color:var(--green)">$ stay_secure —always</span>
+    <span>Designed &amp; built with intention · Hyderabad, India · 2026</span>
+    <span style="color:var(--green)">$ Stay_Secure —Always</span>
   </footer>
 
   <!-- ═══ THOUGHT MODAL ═══ -->
@@ -1407,7 +1401,6 @@
     ══════════════════════════════ */
     const loaderMessages = [
       { text: 'Initializing request…',          pct: 0   },
-      { text: 'Encrypting data…',               pct: 20  },
       { text: 'Establishing secure tunnel…',    pct: 42  },
       { text: 'Verifying certificates…',        pct: 60  },
       { text: 'Authenticating…',                pct: 78  },
