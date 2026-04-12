@@ -1499,6 +1499,55 @@
       draw();
       window.addEventListener('resize', () => { cancelAnimationFrame(animId); init(); draw(); });
     })(); */
+    /* ══ GLOBAL BACKGROUND CANVAS — Cyber Grid + Particles ══ */
+  (function(){
+    const canvas=document.getElementById('globalBg');
+    const ctx=canvas.getContext('2d');
+    let W,H,particles=[],animId;
+    const PARTICLE_COUNT_DESKTOP=60;
+    const PARTICLE_COUNT_MOBILE=25;
+
+    function resize(){
+      W=canvas.width=window.innerWidth;
+      H=canvas.height=window.innerHeight;
+    }
+
+    class Particle{
+      constructor(){this.reset(true);}
+      reset(init){
+        this.x=Math.random()*W;
+        this.y=init?Math.random()*H:-10;
+        this.size=Math.random()*1.5+0.3;
+        this.speedY=Math.random()*0.4+0.1;
+        this.speedX=(Math.random()-0.5)*0.15;
+        this.opacity=Math.random()*0.5+0.1;
+        this.color=Math.random()>0.6?'0,229,160':'0,200,255';
+        this.char=Math.random()>0.5?Math.round(Math.random()).toString():'';
+        this.isChar=Math.random()>0.7;
+      }
+      update(){
+        this.y+=this.speedY;
+        this.x+=this.speedX;
+        if(this.y>H+10||this.x<-10||this.x>W+10)this.reset(false);
+      }
+      draw(){
+        ctx.save();
+        if(this.isChar){
+          ctx.globalAlpha=this.opacity*0.6;
+          ctx.fillStyle=`rgba(${this.color},${this.opacity})`;
+          ctx.font=`${this.size*6}px 'Space Mono',monospace`;
+          ctx.fillText(this.char,this.x,this.y);
+        }else{
+          ctx.globalAlpha=this.opacity;
+          ctx.fillStyle=`rgba(${this.color},1)`;
+          ctx.beginPath();
+          ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+    }
+
 
    (function() {
     const canvas = document.getElementById('heroCanvas');
