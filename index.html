@@ -911,7 +911,7 @@
     <div class="hero-content">
       <div class="hero-badge">
         <span class="badge-dot"></span>
-        Available for new opportunities
+        Open to New Opportunities
       </div>
       <h1 class="hero-title">
         Venkat Sai<br>
@@ -1500,7 +1500,7 @@
       window.addEventListener('resize', () => { cancelAnimationFrame(animId); init(); draw(); });
     })(); */
 
-  /* ══ GLOBAL BACKGROUND CANVAS — Cyber Grid + Particles ══ */
+   /* ══ GLOBAL BACKGROUND CANVAS — Cyber Grid + Particles ══ */
   (function(){
     const canvas=document.getElementById('globalBg');
     const ctx=canvas.getContext('2d');
@@ -1787,6 +1787,11 @@
       ctx.save();
       ctx.font="7px 'Space Mono',monospace";
       ctx.textAlign='left';
+      const stats=[
+        {label:'ALERTS/DAY',val:'100+',color:'#00e5a0'},
+        {label:'STATUS',val:'ACTIVE',color:'#00e5a0'},
+        {label:'THREATS BLOCKED',val:'∞',color:'#ff4757'},
+      ];
       stats.forEach((s,i)=>{
         const x=12+i*(W*0.3);
         ctx.fillStyle='rgba(0,229,160,0.25)';
