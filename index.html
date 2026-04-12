@@ -1420,7 +1420,7 @@
     /** ══════════════════════════════
        HERO CANVAS — NETWORK NODES
     ══════════════════════════════ */
-     (function() {
+     /** (function() {
       const canvas = document.getElementById('heroCanvas');
       const ctx = canvas.getContext('2d');
       let nodes = [], animId;
@@ -1498,290 +1498,153 @@
       init();
       draw();
       window.addEventListener('resize', () => { cancelAnimationFrame(animId); init(); draw(); });
-    })();
+    })(); */
 
-   /* ══ GLOBAL BACKGROUND CANVAS — Cyber Grid + Particles ══ */
-  (function(){
-    const canvas=document.getElementById('globalBg');
-    const ctx=canvas.getContext('2d');
-    let W,H,particles=[],animId;
-    const PARTICLE_COUNT_DESKTOP=60;
-    const PARTICLE_COUNT_MOBILE=25;
+   (function() {
+    const canvas = document.getElementById('heroCanvas');
+    const ctx = canvas.getContext('2d');
+    let packets = [], debris = [], pulse = 0;
+    
+    const CONFIG = {
+        coreColor: '#00E5A0', // Green
+        threatColor: '#FF3131', // Crimson
+        neutralizedColor: '#00D1FF', // Cyan
+        gridColor: 'rgba(0, 209, 255, 0.03)'
+    };
 
-    function resize(){
-      W=canvas.width=window.innerWidth;
-      H=canvas.height=window.innerHeight;
+    function resize() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
     }
 
-    class Particle{
-      constructor(){this.reset(true);}
-      reset(init){
-        this.x=Math.random()*W;
-        this.y=init?Math.random()*H:-10;
-        this.size=Math.random()*1.5+0.3;
-        this.speedY=Math.random()*0.4+0.1;
-        this.speedX=(Math.random()-0.5)*0.15;
-        this.opacity=Math.random()*0.5+0.1;
-        this.color=Math.random()>0.6?'0,229,160':'0,200,255';
-        this.char=Math.random()>0.5?Math.round(Math.random()).toString():'';
-        this.isChar=Math.random()>0.7;
-      }
-      update(){
-        this.y+=this.speedY;
-        this.x+=this.speedX;
-        if(this.y>H+10||this.x<-10||this.x>W+10)this.reset(false);
-      }
-      draw(){
-        ctx.save();
-        if(this.isChar){
-          ctx.globalAlpha=this.opacity*0.6;
-          ctx.fillStyle=`rgba(${this.color},${this.opacity})`;
-          ctx.font=`${this.size*6}px 'Space Mono',monospace`;
-          ctx.fillText(this.char,this.x,this.y);
-        }else{
-          ctx.globalAlpha=this.opacity;
-          ctx.fillStyle=`rgba(${this.color},1)`;
-          ctx.beginPath();
-          ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
-          ctx.fill();
+    class Packet {
+        constructor() { this.reset(); }
+        reset() {
+            this.x = -20;
+            this.y = Math.random() * canvas.height;
+            this.speed = Math.random() * 4 + 2;
+            this.label = (Math.random() > 0.5 ? "DDoS" : "0x" + Math.floor(Math.random()*16).toString(16).toUpperCase());
+            this.label = (Math.random() > 0.5 ? "MaliciousIjections" : "0x" + Math.floor(Math.random()*16).toString(16).toUpperCase());
+            this.label = (Math.random() > 0.5 ? "Phishing attacks" : "0x" + Math.floor(Math.random()*16).toString(16).toUpperCase());
+           this.label = (Math.random() > 0.5 ? "Malware attacks" : "0x" + Math.floor(Math.random()*16).toString(16).toUpperCase());
         }
-        ctx.restore();
-      }
-    }
-
-    function drawGrid(){
-      const step=50;
-      ctx.strokeStyle='rgba(0,229,160,0.018)';
-      ctx.lineWidth=1;
-      for(let x=0;x<W;x+=step){
-        ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();
-      }
-      for(let y=0;y<H;y+=step){
-        ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();
-      }
-    }
-
-    function drawScanLine(t){
-      const y=(t*0.04)%H;
-      const grad=ctx.createLinearGradient(0,y-30,0,y+30);
-      grad.addColorStop(0,'rgba(0,229,160,0)');
-      grad.addColorStop(0.5,'rgba(0,229,160,0.025)');
-      grad.addColorStop(1,'rgba(0,229,160,0)');
-      ctx.fillStyle=grad;
-      ctx.fillRect(0,y-30,W,60);
-    }
-
-    function animate(t){
-      ctx.clearRect(0,0,W,H);
-      drawGrid();
-      drawScanLine(t);
-      particles.forEach(p=>{p.update();p.draw();});
-      animId=requestAnimationFrame(animate);
-    }
-
-    function init(){
-      resize();
-      const count=W<768?PARTICLE_COUNT_MOBILE:PARTICLE_COUNT_DESKTOP;
-      particles=Array.from({length:count},()=>new Particle());
-    }
-
-    init();
-    animate(0);
-    window.addEventListener('resize',()=>{cancelAnimationFrame(animId);init();animate(0);});
-  })();
-
-  /* ══ HERO CANVAS — SOC Terminal Attack Visualization ══ */
-  (function(){
-    const canvas=document.getElementById('heroCanvas');
-    const ctx=canvas.getContext('2d');
-    let W,H,threats=[],pulseT=0,animId2;
-
-    function resize(){
-      const r=canvas.parentElement.getBoundingClientRect();
-      W=canvas.width=r.width||450;
-      H=canvas.height=r.height||480;
-    }
-
-    const SHIELD_X_RATIO=0.72;
-    const LABELS=['DDoS','Malware','Phishing','0-Day','Ransomware','APT','C2 Beacon','SQL Inject','XSS','Brute Force'];
-
-    class Threat{
-      constructor(){this.spawn();}
-      spawn(){
-        this.x=-60;
-        this.y=H*0.15+Math.random()*H*0.7;
-        this.speed=Math.random()*2.2+1.2;
-        this.label=LABELS[Math.floor(Math.random()*LABELS.length)];
-        this.blocked=false;
-        this.explodeT=0;
-        this.explodeParticles=[];
-        this.alpha=1;
-        this.color=`hsl(${Math.random()*30+355},90%,55%)`;
-      }
-      update(){
-        if(!this.blocked){
-          this.x+=this.speed;
-          if(this.x>=W*SHIELD_X_RATIO-8){
-            this.blocked=true;
-            for(let i=0;i<14;i++){
-              this.explodeParticles.push({
-                x:this.x,y:this.y,
-                vx:(Math.random()-0.5)*6,
-                vy:(Math.random()-0.5)*6,
-                life:1,size:Math.random()*2+1
-              });
+        update(barrierX) {
+            this.x += this.speed;
+            if (this.x > barrierX - 5) {
+                explode(this.x, this.y);
+                this.reset();
             }
-          }
-        }else{
-          this.explodeT+=0.05;
-          this.alpha=Math.max(0,1-this.explodeT*1.5);
-          this.explodeParticles.forEach(p=>{
-            p.x+=p.vx;p.y+=p.vy;p.life-=0.04;
-          });
-          if(this.alpha<=0)this.spawn();
         }
-      }
-      draw(){
-        if(!this.blocked){
-          // Arrow body
-          ctx.save();
-          ctx.globalAlpha=0.85;
-          ctx.shadowBlur=8;ctx.shadowColor=this.color;
-          ctx.fillStyle=this.color;
-          ctx.beginPath();
-          ctx.moveTo(this.x,this.y-3);
-          ctx.lineTo(this.x-24,this.y-6);
-          ctx.lineTo(this.x-24,this.y-2);
-          ctx.lineTo(this.x-40,this.y-2);
-          ctx.lineTo(this.x-40,this.y+2);
-          ctx.lineTo(this.x-24,this.y+2);
-          ctx.lineTo(this.x-24,this.y+6);
-          ctx.closePath();
-          ctx.fill();
-          // Label
-          ctx.shadowBlur=0;
-          ctx.globalAlpha=0.9;
-          ctx.fillStyle='#fff';
-          ctx.font="9px 'Space Mono',monospace";
-          ctx.fillText(this.label,this.x-38,this.y-9);
-          ctx.restore();
-        }else{
-          // Explosion
-          this.explodeParticles.forEach(p=>{
-            if(p.life<=0)return;
-            ctx.save();
-            ctx.globalAlpha=p.life*this.alpha;
-            ctx.fillStyle='rgba(0,229,160,0.9)';
-            ctx.shadowBlur=6;ctx.shadowColor='#00e5a0';
+        draw() {
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = CONFIG.threatColor;
+            ctx.fillStyle = CONFIG.threatColor;
+            ctx.font = "10px 'Courier New'";
+            ctx.fillText(this.label, this.x, this.y);
+            ctx.fillRect(this.x, this.y + 2, 15, 1);
+        }
+    }
+
+    function explode(x, y) {
+        for(let i=0; i<6; i++) {
+            debris.push({
+                x, y,
+                vx: Math.random() * 5,
+                vy: (Math.random() - 0.5) * 8,
+                life: 1,
+                char: Math.round(Math.random()).toString()
+            });
+        }
+    }
+
+    function drawAnalyst(x, y) {
+        ctx.save();
+        ctx.translate(x, y);
+        
+        // Orbital Rings (The Tools/SIEM)
+        pulse += 0.02;
+        ctx.strokeStyle = CONFIG.neutralizedColor;
+        ctx.lineWidth = 0.5;
+        for(let i=0; i<3; i++) {
             ctx.beginPath();
-            ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
-            ctx.fill();
-            ctx.restore();
-          });
-          // Blocked label
-          ctx.save();
-          ctx.globalAlpha=this.alpha*0.8;
-          ctx.fillStyle='#00e5a0';
-          ctx.font="bold 9px 'Space Mono',monospace";
-          ctx.fillText('BLOCKED',this.x-42,this.y-12);
-          ctx.restore();
+            ctx.ellipse(0, 0, 40 + (i*15), 20, (pulse + i), 0, Math.PI * 2);
+            ctx.stroke();
         }
-      }
-    }
 
-    function drawShield(){
-      const sx=W*SHIELD_X_RATIO;
-      pulseT+=0.025;
-      const pulse=Math.sin(pulseT)*0.12+0.88;
-
-      // Shield glow layers
-      for(let i=3;i>0;i--){
-        const w=10+i*8;
-        const grad=ctx.createLinearGradient(sx-w,0,sx+w,0);
-        grad.addColorStop(0,'rgba(0,229,160,0)');
-        grad.addColorStop(0.5,`rgba(0,229,160,${0.04*i*pulse})`);
-        grad.addColorStop(1,'rgba(0,229,160,0)');
-        ctx.fillStyle=grad;
-        ctx.fillRect(sx-w,H*0.1,w*2,H*0.8);
-      }
-
-      // Shield line
-      ctx.save();
-      ctx.shadowBlur=12*pulse;ctx.shadowColor='#00e5a0';
-      ctx.strokeStyle=`rgba(0,229,160,${0.7*pulse})`;
-      ctx.lineWidth=2;
-      ctx.beginPath();ctx.moveTo(sx,H*0.08);ctx.lineTo(sx,H*0.92);ctx.stroke();
-      ctx.restore();
-
-      // Shield label
-      ctx.save();
-      ctx.fillStyle='rgba(0,229,160,0.7)';
-      ctx.font="8px 'Space Mono',monospace";
-      ctx.textAlign='center';
-      ctx.fillText('DEFENSE PERIMETER',sx,H*0.06);
-      ctx.restore();
-    }
-
-    function drawAnalyst(){
-      const ax=W*SHIELD_X_RATIO+W*0.12;
-      const ay=H*0.5;
-
-      ctx.save();
-      // Orbital rings (tools)
-      const tools=['SIEM','EDR','XDR'];
-      tools.forEach((t,i)=>{
-        const angle=pulseT*0.8+i*(Math.PI*2/3);
-        const rx=50+i*8;
-        const ry=22+i*4;
-        ctx.strokeStyle=`rgba(0,200,255,${0.3+i*0.1})`;
-        ctx.lineWidth=0.8;
+        // Analyst Silhouette (Anime Tech Style)
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = "#FFF";
+        ctx.fillStyle = "#FFF";
+        // Head/Visor
         ctx.beginPath();
-        ctx.ellipse(ax,ay,rx,ry,angle*0.3,0,Math.PI*2);
-        ctx.stroke();
+        ctx.arc(0, -40, 10, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = CONFIG.neutralizedColor;
+        ctx.fillRect(-8, -42, 16, 3); // Visor glow
 
-        // Tool label on orbit
-        const tx=ax+Math.cos(angle)*rx;
-        const ty=ay+Math.sin(angle)*ry;
-        ctx.fillStyle='rgba(0,200,255,0.7)';
-        ctx.font="7px 'Space Mono',monospace";
-        ctx.textAlign='center';
-        ctx.fillText(t,tx,ty);
-      });
+        // Shoulder/Body
+        ctx.fillStyle = "#FFF";
+        ctx.beginPath();
+        ctx.moveTo(-25, 10); ctx.lineTo(25, 10);
+        ctx.lineTo(15, -25); ctx.lineTo(-15, -25);
+        ctx.closePath();
+        ctx.fill();
 
-      // Analyst figure
-      ctx.shadowBlur=16;ctx.shadowColor='rgba(0,229,160,0.5)';
-      // Head
-      ctx.fillStyle='#eaf2ff';
-      ctx.beginPath();ctx.arc(ax,ay-34,9,0,Math.PI*2);ctx.fill();
-      // Visor
-      ctx.fillStyle='rgba(0,229,160,0.7)';
-      ctx.fillRect(ax-7,ay-37,14,4);
-      // Body
-      ctx.fillStyle='rgba(0,229,160,0.15)';
-      ctx.strokeStyle='rgba(0,229,160,0.5)';
-      ctx.lineWidth=1.5;
-      ctx.beginPath();
-      ctx.moveTo(ax-18,ay+14);ctx.lineTo(ax+18,ay+14);
-      ctx.lineTo(ax+12,ay-20);ctx.lineTo(ax-12,ay-20);
-      ctx.closePath();ctx.fill();ctx.stroke();
-      // Core glow
-      const coreGrad=ctx.createRadialGradient(ax,ay,0,ax,ay,30);
-      coreGrad.addColorStop(0,'rgba(0,229,160,0.2)');
-      coreGrad.addColorStop(1,'rgba(0,229,160,0)');
-      ctx.fillStyle=coreGrad;
-      ctx.beginPath();ctx.arc(ax,ay,30,0,Math.PI*2);ctx.fill();
-
-      // Status text
-      ctx.shadowBlur=0;
-      ctx.fillStyle='rgba(0,229,160,0.8)';
-      ctx.font="bold 7px 'Space Mono',monospace";
-      ctx.textAlign='center';
-      ctx.fillText('SOC ANALYST',ax,ay+28);
-      ctx.fillStyle='rgba(0,229,160,0.5)';
-      ctx.fillText('MONITORING',ax,ay+38);
-      ctx.restore();
+        // Terminal Screen 
+        ctx.globalAlpha = 0.5;
+        ctx.fillStyle = CONFIG.neutralizedColor;
+        ctx.fillRect(-60, -50, 30, 20); // Floating screen
+        ctx.restore();
     }
 
+    function drawGrid() {
+        ctx.strokeStyle = CONFIG.gridColor;
+        const step = 50;
+        for (let x = 0; x < canvas.width; x += step) {
+            ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+        }
+        for (let y = 0; y < canvas.height; y += step) {
+            ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawGrid();
+        
+        const barrierX = canvas.width * 0.75;
+
+        // Perimeter Shield
+        const grad = ctx.createLinearGradient(barrierX-10, 0, barrierX+5, 0);
+        grad.addColorStop(0, 'transparent');
+        grad.addColorStop(0.5, CONFIG.coreColor);
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.globalAlpha = 0.3 + (Math.sin(pulse*2)*0.1);
+        ctx.fillRect(barrierX - 15, 0, 30, canvas.height);
+        ctx.globalAlpha = 1;
+
+        packets.forEach(p => { p.update(barrierX); p.draw(); });
+
+        debris.forEach((d, i) => {
+            d.x += d.vx; d.y += d.vy; d.life -= 0.02;
+            ctx.fillStyle = CONFIG.neutralizedColor;
+            ctx.globalAlpha = d.life;
+            ctx.font = "8px monospace";
+            ctx.fillText(d.char, d.x, d.y);
+            if(d.life <= 0) debris.splice(i, 1);
+        });
+
+        drawAnalyst(barrierX + 70, canvas.height / 2);
+        requestAnimationFrame(animate);
+    }
+
+    resize();
+    packets = Array.from({length: 10}, () => new Packet());
+    animate();
+    window.addEventListener('resize', resize);
+})();
     /* ══════════════════════════════
        TYPING ANIMATION
     ══════════════════════════════ */
