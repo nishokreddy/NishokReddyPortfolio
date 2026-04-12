@@ -1503,13 +1503,14 @@
     (function() {
     const canvas = document.getElementById('heroCanvas');
     const ctx = canvas.getContext('2d');
-    let threats = [], particles = [], animId;
+    let threats = [], particles = [], scanLine = 0;
     
-    const COLORS = {
-        threat: '#ff3e3e',
-        shield: '#00e5a0',
-        neutralized: '#00c8ff',
-        analyst: '#ffffff'
+    const THEME = {
+        threat: '#FF4136',
+        shield: '#00E5A0',
+        shieldGlow: 'rgba(0, 229, 160, 0.2)',
+        data: '#00C8FF',
+        grid: 'rgba(0, 200, 255, 0.05)'
     };
 
     function resize() {
@@ -1521,110 +1522,143 @@
     class Threat {
         constructor() { this.init(); }
         init() {
-            this.x = -20;
+            this.x = -50;
             this.y = Math.random() * canvas.height;
-            this.speed = Math.random() * 2 + 1;
-            this.size = Math.random() * 3 + 2;
-        }
-        update(shieldX) {
-            this.x += this.speed;
-            // Check collision with Perimeter Shield
-            if (this.x >= shieldX - 10) {
-                createExplosion(this.x, this.y);
-                this.init();
-            }
+            this.speed = Math.random() * 3 + 2;
+            this.w = Math.random() * 15 + 10;
         }
         draw() {
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = COLORS.threat;
-            ctx.fillStyle = COLORS.threat;
-            ctx.fillRect(this.x, this.y, this.size * 2, 2);
+            ctx.fillStyle = THEME.threat;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = THEME.threat;
+            ctx.fillRect(this.x, this.y, this.w, 2);
+            // Glitch effect trailing
+            if(Math.random() > 0.9) {
+                ctx.fillRect(this.x - 20, this.y + (Math.random()-0.5)*10, 5, 1);
+            }
         }
     }
 
-    function createExplosion(x, y) {
-        for(let i=0; i<5; i++) {
+    function createDebris(x, y) {
+        for(let i=0; i<8; i++) {
             particles.push({
-                x, y, 
-                vx: Math.random() * 2, 
-                vy: (Math.random() - 0.5) * 4,
-                life: 1.0
+                x, y,
+                vx: Math.random() * 4 + 2,
+                vy: (Math.random() - 0.5) * 10,
+                life: 1.0,
+                size: Math.random() * 3
             });
         }
     }
 
     function drawAnalyst(x, y) {
-        // Simple "Cyber-Punk" Avatar Silhouette
         ctx.save();
         ctx.translate(x, y);
+        
+        // Holographic Rings around Analyst
+        const time = Date.now() / 1000;
+        ctx.strokeStyle = THEME.data;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(0, -25, 45 + Math.sin(time)*5, 0, Math.PI * 2);
+        ctx.setLineDash([5, 15]);
+        ctx.stroke();
+
+        // Analyst Silhouette
         ctx.shadowBlur = 20;
-        ctx.shadowColor = COLORS.neutralized;
-        
-        // Head/Helmet
-        ctx.fillStyle = COLORS.analyst;
+        ctx.shadowColor = '#FFF';
+        ctx.fillStyle = '#FFF';
+        // Head
         ctx.beginPath();
-        ctx.arc(0, -40, 12, 0, Math.PI * 2);
+        ctx.arc(0, -45, 10, 0, Math.PI*2);
         ctx.fill();
-        
-        // Body/Shoulders
+        // Torso (Angular/Anime style)
         ctx.beginPath();
-        ctx.moveTo(-20, 0);
-        ctx.lineTo(20, 0);
-        ctx.lineTo(15, -25);
-        ctx.lineTo(-15, -25);
+        ctx.moveTo(-18, 0);
+        ctx.lineTo(18, 0);
+        ctx.lineTo(12, -30);
+        ctx.lineTo(-12, -30);
         ctx.closePath();
         ctx.fill();
-
-        // Holographic Screen in front of Analyst
-        ctx.strokeStyle = COLORS.neutralized;
-        ctx.lineWidth = 1;
-        ctx.strokeRect(-35, -50, 20, 30);
+        
+        // Floating Interface Screens
+        ctx.fillStyle = THEME.data;
+        ctx.globalAlpha = 0.6;
+        ctx.fillRect(-50, -60, 25, 15);
+        ctx.fillRect(-45, -40, 20, 10);
+        
         ctx.restore();
+    }
+
+    function drawBackground() {
+        // Subtle Hex Grid
+        ctx.strokeStyle = THEME.grid;
+        ctx.lineWidth = 1;
+        const size = 40;
+        for (let x = 0; x < canvas.width; x += size) {
+            for (let y = 0; y < canvas.height; y += size) {
+                ctx.strokeRect(x, y, size, size);
+            }
+        }
     }
 
     function init() {
         resize();
-        threats = Array.from({ length: 15 }, () => new Threat());
-        particles = [];
+        threats = Array.from({ length: 12 }, () => new Threat());
     }
 
-    function draw() {
+    function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const shieldX = canvas.width * 0.75;
+        drawBackground();
+        
+        const shieldX = canvas.width * 0.7;
 
-        // 1. Draw Perimeter Shield
-        const grad = ctx.createLinearGradient(shieldX, 0, shieldX + 10, 0);
-        grad.addColorStop(0, 'rgba(0, 229, 160, 0)');
-        grad.addColorStop(0.5, 'rgba(0, 229, 160, 0.5)');
-        grad.addColorStop(1, 'rgba(0, 229, 160, 0)');
-        ctx.fillStyle = grad;
-        ctx.fillRect(shieldX - 20, 0, 40, canvas.height);
+        // 1. Moving Shield Radar
+        scanLine = (scanLine + 2) % canvas.height;
+        ctx.fillStyle = THEME.shieldGlow;
+        ctx.fillRect(shieldX - 40, 0, 80, canvas.height);
+        
+        // Active Firewall Line
+        ctx.strokeStyle = THEME.shield;
+        ctx.lineWidth = 3;
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = THEME.shield;
+        ctx.beginPath();
+        ctx.moveTo(shieldX, 0);
+        ctx.lineTo(shieldX, canvas.height);
+        ctx.stroke();
 
-        // 2. Draw & Update Threats
+        // 2. Threats Logic
         threats.forEach(t => {
-            t.update(shieldX);
+            t.x += t.speed;
             t.draw();
+            if (t.x > shieldX - 5) {
+                createDebris(t.x, t.y);
+                t.init();
+            }
         });
 
-        // 3. Draw Neutralized Particles
+        // 3. Particles Logic
         particles.forEach((p, i) => {
             p.x += p.vx;
             p.y += p.vy;
             p.life -= 0.02;
-            ctx.fillStyle = `rgba(0, 200, 255, ${p.life})`;
-            ctx.fillRect(p.x, p.y, 2, 2);
+            ctx.fillStyle = THEME.data;
+            ctx.globalAlpha = p.life;
+            ctx.fillRect(p.x, p.y, p.size, p.size);
             if(p.life <= 0) particles.splice(i, 1);
         });
+        ctx.globalAlpha = 1.0;
 
-        // 4. Draw The Analyst (positioned behind the shield)
-        drawAnalyst(shieldX + 60, canvas.height / 2);
+        // 4. Draw Hero Analyst
+        drawAnalyst(shieldX + 80, canvas.height / 2);
 
-        animId = requestAnimationFrame(draw);
+        requestAnimationFrame(animate);
     }
 
     init();
-    draw();
-    window.addEventListener('resize', () => { cancelAnimationFrame(animId); init(); draw(); });
+    animate();
+    window.addEventListener('resize', init);
 })();
     /* ══════════════════════════════
        TYPING ANIMATION
