@@ -1417,10 +1417,10 @@
     }
     window.addEventListener('DOMContentLoaded', () => setTimeout(runLoader, 200));
 
-    /* ══════════════════════════════
+    /** ══════════════════════════════
        HERO CANVAS — NETWORK NODES
     ══════════════════════════════ */
-    (function() {
+     /** (function() {
       const canvas = document.getElementById('heroCanvas');
       const ctx = canvas.getContext('2d');
       let nodes = [], animId;
@@ -1498,8 +1498,110 @@
       init();
       draw();
       window.addEventListener('resize', () => { cancelAnimationFrame(animId); init(); draw(); });
-    })();
+    })(); */
 
+    (function () {
+  const canvas = document.getElementById("heroCanvas");
+  const ctx = canvas.getContext("2d");
+
+  let attacks = [];
+  const ATTACK_COUNT = 25;
+
+  function resize() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+  }
+
+  function createAttack() {
+    const edge = Math.floor(Math.random() * 4);
+
+    let x, y;
+
+    if (edge === 0) { x = 0; y = Math.random() * canvas.height; }
+    if (edge === 1) { x = canvas.width; y = Math.random() * canvas.height; }
+    if (edge === 2) { x = Math.random() * canvas.width; y = 0; }
+    if (edge === 3) { x = Math.random() * canvas.width; y = canvas.height; }
+
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+
+    const angle = Math.atan2(centerY - y, centerX - x);
+
+    return {
+      x,
+      y,
+      vx: Math.cos(angle) * (1 + Math.random()),
+      vy: Math.sin(angle) * (1 + Math.random()),
+      size: 2,
+      blocked: false
+    };
+  }
+
+  function init() {
+    resize();
+    attacks = Array.from({ length: ATTACK_COUNT }, createAttack);
+  }
+
+  function drawShield(cx, cy, radius) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(0,255,170,0.5)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    const shieldRadius = 120;
+
+    // Draw protected core
+    ctx.beginPath();
+    ctx.arc(cx, cy, 10, 0, Math.PI * 2);
+    ctx.fillStyle = "#00ffa0";
+    ctx.fill();
+
+    // Draw shield
+    drawShield(cx, cy, shieldRadius);
+
+    attacks.forEach(a => {
+      if (!a.blocked) {
+        a.x += a.vx;
+        a.y += a.vy;
+
+        const dx = a.x - cx;
+        const dy = a.y - cy;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        // Hit shield
+        if (dist < shieldRadius) {
+          a.blocked = true;
+          a.size = 4;
+        }
+      } else {
+        a.size *= 0.95; // fade effect
+      }
+
+      // Draw attack trail
+      ctx.beginPath();
+      ctx.arc(a.x, a.y, a.size, 0, Math.PI * 2);
+      ctx.fillStyle = a.blocked
+        ? "rgba(0,255,170,0.7)"   // blocked = green
+        : "rgba(255,70,70,0.8)";  // incoming = red
+      ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener("resize", init);
+
+  init();
+  draw();
+})();
     /* ══════════════════════════════
        TYPING ANIMATION
     ══════════════════════════════ */
