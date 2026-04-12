@@ -1420,7 +1420,7 @@
     /** ══════════════════════════════
        HERO CANVAS — NETWORK NODES
     ══════════════════════════════ */
-     /** (function() {
+     (function() {
       const canvas = document.getElementById('heroCanvas');
       const ctx = canvas.getContext('2d');
       let nodes = [], animId;
@@ -1498,7 +1498,7 @@
       init();
       draw();
       window.addEventListener('resize', () => { cancelAnimationFrame(animId); init(); draw(); });
-    })(); */
+    })();
 
    /* ══ GLOBAL BACKGROUND CANVAS — Cyber Grid + Particles ══ */
   (function(){
@@ -1782,61 +1782,6 @@
       ctx.restore();
     }
 
-    function drawStats(){
-      // Top stats bar
-      ctx.save();
-      ctx.font="7px 'Space Mono',monospace";
-      ctx.textAlign='left';
-      const stats=[
-        {label:'ALERTS/DAY',val:'100+',color:'#00e5a0'},
-        {label:'STATUS',val:'ACTIVE',color:'#00e5a0'},
-        {label:'THREATS BLOCKED',val:'∞',color:'#ff4757'},
-      ];
-      stats.forEach((s,i)=>{
-        const x=12+i*(W*0.3);
-        ctx.fillStyle='rgba(0,229,160,0.25)';
-        ctx.fillRect(x,8,W*0.28,20);
-        ctx.fillStyle=s.color;
-        ctx.fillText(s.val,x+6,20);
-        ctx.fillStyle='rgba(200,220,230,0.4)';
-        ctx.fillText(s.label,x+6,10+18);
-      });
-      ctx.restore();
-    }
-
-    function animate(){
-      ctx.clearRect(0,0,W,H);
-
-      // Background tint
-      ctx.fillStyle='rgba(6,11,16,0.4)';
-      ctx.fillRect(0,0,W,H);
-
-      // Border
-      ctx.strokeStyle='rgba(0,229,160,0.08)';
-      ctx.lineWidth=1;
-      ctx.strokeRect(1,1,W-2,H-2);
-
-      drawStats();
-      drawShield();
-      threats.forEach(t=>{t.update();t.draw();});
-      drawAnalyst();
-      animId2=requestAnimationFrame(animate);
-    }
-
-    function init(){
-      resize();
-      // Stagger spawning
-      threats=Array.from({length:6},(_,i)=>{
-        const t=new Threat();
-        t.x=-60-(i*80);
-        return t;
-      });
-    }
-
-    init();
-    animate();
-    window.addEventListener('resize',()=>{cancelAnimationFrame(animId2);init();animate();});
-  })();
     /* ══════════════════════════════
        TYPING ANIMATION
     ══════════════════════════════ */
