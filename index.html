@@ -1524,7 +1524,10 @@
             this.x = -20;
             this.y = Math.random() * canvas.height;
             this.speed = Math.random() * 4 + 2;
-            this.label = (Math.random() > 0.5 ? "ERR_403" : "0x" + Math.floor(Math.random()*16).toString(16).toUpperCase());
+            this.label = (Math.random() > 0.5 ? "DDoS" : "0x" + Math.floor(Math.random()*16).toString(16).toUpperCase());
+            this.label = (Math.random() > 0.5 ? "MaliciousIjections" : "0x" + Math.floor(Math.random()*16).toString(16).toUpperCase());
+            this.label = (Math.random() > 0.5 ? "Phishing attacks" : "0x" + Math.floor(Math.random()*16).toString(16).toUpperCase());
+           this.label = (Math.random() > 0.5 ? "Malware attacks" : "0x" + Math.floor(Math.random()*16).toString(16).toUpperCase());
         }
         update(barrierX) {
             this.x += this.speed;
